@@ -1,0 +1,21 @@
+
+export auth_header='Authorization: Bearer ADD_YOUR_TOKEN'
+curl -q -X GET -H "${auth_header}" http://localhost:8585/api/v1/bots/ | python3 -m json.tool
+
+List databases:
+curl -X GET -H "${auth_header}" http://localhost:8585/api/v1/databases/ | python3 -m json.tool
+
+# Get existing database Service
+curl -X GET -H "${auth_header}" http://localhost:8585/api/v1/services/databaseServices/ | python3 -m json.tool
+
+POST - just create, fails if exists
+PUT - create OR update
+
+# Create or update new database
+curl -X PUT -H "${auth_header}" -H "Content-Type: application/json" -d '{"name": "newDBCurl", "service": "local_postgres"}' http://localhost:8585/api/v1/databases/ | python3 -m json.tool
+
+# Create or update new schema
+curl -X PUT -H "${auth_header}" -H "Content-Type: application/json" -d '{"name": "CurlSchema", "database": "local_postgres.newDBCurl"}' http://localhost:8585/api/v1/databaseSchemas/ | python3 -m json.tool
+
+# Create or update new table
+curl -X PUT -H "${auth_header}" -H "Content-Type: application/json" -d '{"name": "CurlTable", "databaseSchema": "local_postgres.newDBCurl.CurlSchema", "columns": [{"name": "column1", "dataType": "INT"}]}' http://localhost:8585/api/v1/tables/ | python3 -m json.tool
